@@ -1,2 +1,2 @@
-# rubiks_cube
-project to create a rubiks cube solver - both hardware and software.
+#Rubiks cube solver
+This project aims to create a robot that solves rubiks cube using computer vision to recognise colors of the cube and reinforcement learning to find solution path.
