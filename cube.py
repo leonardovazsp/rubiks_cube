@@ -20,7 +20,7 @@ for pin in pins.values():
 
 class Cube():
     def __init__(self):
-        pass
+        self.orientation = 1
     
     def move(self, pin, steps=50):
         for i in range(steps):
@@ -29,34 +29,34 @@ class Cube():
             GPIO.output(pin, False)
             time.sleep(WAIT_TIME)
             
-    def top(self, orientation=1):
-        GPIO.output(pins['direction'], orientation)
+    def top(self):
+        GPIO.output(pins['direction'], self.orientation)
         self.move(pins['top'])
         
-    def right(self, orientation=1):
-        GPIO.output(pins['direction'], orientation)
+    def right(self):
+        GPIO.output(pins['direction'], self.orientation)
         self.move(pins['right'])
         
-    def left(self, orientation=1):
-        GPIO.output(pins['direction'], orientation)
+    def left(self):
+        GPIO.output(pins['direction'], self.orientation)
         self.move(pins['left'])
         
-    def bottom(self, orientation=1):
-        GPIO.output(pins['direction'], orientation)
+    def bottom(self):
+        GPIO.output(pins['direction'], self.orientation)
         self.move(pins['bottom'])
     
-    def back(self, orientation=1):
-        GPIO.output(pins['direction'], orientation)
+    def back(self):
+        GPIO.output(pins['direction'], self.orientation)
         self.move(pins['back'])
     
-    def front(self, orientation=1):
-        GPIO.output(pins['direction'], orientation)
+    def front(self):
+        GPIO.output(pins['direction'], self.orientation)
         self.move(pins['front'])
 
 if __name__ == '__main__':
     cube = Cube()
     moves = [ cube.left, cube.top, cube.right, cube.back, cube.bottom, cube.front]
-    for i in range(2):
+    for i in range(1):
         for move in moves:
             for i in range(4):
                 move()
