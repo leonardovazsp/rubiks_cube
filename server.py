@@ -1,10 +1,13 @@
 import socketserver
+import cube.py
+
+cube = cube.Cube()
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
-    def handler(self):
+    def handle(self):
         self.data = self.request.recv(1024).strip()
-        print(f"{self.client_address} wrote:")
-        print(self.data)
+        move = 'cube.'+ str(self.data, 'utf-8')
+        print(move)
         self.request.sendall(self.data.upper())
 
 if __name__ == '__main__':
