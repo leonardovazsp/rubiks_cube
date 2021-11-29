@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Rubik's Cube</title>
+
+    <style>
+        .bttn {
+            height: 50px;
+            width: 150px;
+            font-size: medium;
+            margin: 0%;
+            vertical-align: top;
+        }
+        .mydiv {
+            width: 100%;
+        }
+        .mydiv.top{
+            text-align: center;
+        }
+        .mydiv.left{
+            float: left;
+            width: 50%;
+            text-align: left;
+        }
+        .mydiv.right{
+            float: right;
+            width: 50%;
+            text-align: right;
+        }
+        .mydiv.bottom{
+            float: right;
+            text-align: center;
+        }
+    </style>
+  </head>
+  <body>
+
+    <form method='post' id='ajaxform'>
+        <div class='mydiv top'>
+            <button type='submit' class='bttn' name='submit_button' value='top'>Top Clockwise</button>
+            <button type='submit' class='bttn' name='submit_button' value='top_rev'>Top Counterclockwise</button>
+        </div>
+        <div class='mydiv left'>
+            <button type='submit' class='bttn' name='submit_button' value='left'>Left Clockwise</button>
+            <button type='submit' class='bttn' name='submit_button' value='left_rev'>Left Counterclockwise</button>
+        </div>
+        <div class='mydiv right'>
+            <button type='submit' class='bttn' name='submit_button' value='right'>Right Clockwise</button>
+            <button type='submit' class='bttn' name='submit_button' value='right_rev'>Right Counterclockwise</button>
+        </div>
+        <div class='mydiv bottom'>
+            <button type='submit' class='bttn' name='submit_button' value='bottom'>Bottom Clockwise</button>
+            <button type='submit' class='bttn' name='submit_button' value='bottom_rev'>Bottom Counterclockwise</button>
+        </div>
+        <div class='mydiv'>
+            <button type='submit' class='bttn' name='submit_button' value='front'>Front Clockwise</button>
+            <button type='submit' class='bttn' name='submit_button' value='front_rev'>Front Counterclockwise</button>
+        </div>
+        <div class='mydiv'>
+            <button type='submit' class='bttn' name='submit_button' value='back'>Back Clockwise</button>
+            <button type='submit' class='bttn' name='submit_button' value='back_rev'>Back Counterclockwise</button>
+        </div>
+
+
+    </form>
+    <div style="text-align: center;">
+        <img id="mjpeg" alt="MJPEG" src="/stream.mjpg" onclick="fitWidth=!fitWidth; setImageSize('mjpeg')" ondrop="drop(event)" ondragover="allowDrop(event)" style="width: 50%; height: auto; text-align: center;">
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        var allButtons = document.querySelectorAll('button[class=bttn]');
+        console.log("Found", allButtons.length, "div which class starts with “button”.");
+
+        for (var i = 0; i < allButtons.length; i++) {
+            allButtons[i].addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log("You clicked:", this.value);
+		var move={'move': this.value};
+                $.ajax({
+                    type:'POST',
+                    url:'/',
+		    data: this.value
+                });
+                console.log(this.value)
+                // console.clear();
+                
+            });
+        }
+      </script>
+  </body>
+</html>
