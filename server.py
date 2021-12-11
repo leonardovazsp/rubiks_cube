@@ -46,13 +46,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
         move = str(post_data, 'utf-8')
-        print(move)
-        if move[-3:] == 'rev':
-            cube.orientation = 0
-            move = move[:-4]
-        else:
-            cube.orientation = 1
-        print(move)
         move = getattr(cube, move)()
         move
 
