@@ -1,14 +1,27 @@
-import socket
-import sys
+import cv2
+import numpy as np
+import os
+import time
+import requests
+import random
 
-HOST, PORT = '192.168.1.107', 9999
-data = " ".join(sys.argv[1:])
+post_url = "http://192.168.1.103:8000"
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-    sock.connect((HOST, PORT))
-    sock.sendall(bytes(data + '\n', 'utf-8'))
+directory = r"C:\Users\leona\OneDrive\Documents\Python Projects\AI\rubiks_cube\train"
 
-    received = str(sock.recv(1024), 'utf-8')
+# os.chdir(directory)
+def get_move(filename, move=''):
+    
+    r = requests.post(post_url, data=move)
+    cube_pos = np.frombuffer(r.content).reshape(6,3,3,6)
+    time.sleep(.25)
+    cap = cv2.VideoCapture('http://192.168.1.103:8000/capture.mjpeg')
+    ret, frame = cap.read()
+    cv2.imwrite(filename + '.jpg', frame)
+    np.save(filename + '.npy', cube_pos)    
 
-print(f"Sent: {data}")
-print(f"Received: {received}")
+for i in range(20):
+    filename = os.path.join(directory, str(i))
+    get_move(filename)
+
+get_move('reset', move='reset')
