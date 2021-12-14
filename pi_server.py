@@ -23,17 +23,17 @@ class StreamingOutput(object):
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
-        self.data = self.request.recv(1024).strip()
-        move = str(self.data, 'utf-8')
-        print(move)
-        if move[-3:] == 'rev':
-            cube.orientation = 0
-            move = move[:-4]
-        else:
-            cube.orientation = 1
-        print(move)
-        move = getattr(cube, move)()
-        move
+        # self.data = self.request.recv(1024).strip()
+        # move = str(self.data, 'utf-8')
+        # print(move)
+        # if move[-3:] == 'rev':
+        #     cube.orientation = 0
+        #     move = move[:-4]
+        # else:
+        #     cube.orientation = 1
+        # print(move)
+        # move = getattr(cube, move)()
+        # move
         # self.request.sendall(self.data.upper())
         try:
             while True:
@@ -46,7 +46,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 
 
 if __name__ == '__main__':
-    HOST, PORT = '192.168.1.107', 9999
+    HOST, PORT = '192.168.1.103', 9999
 
     with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
         output = StreamingOutput()

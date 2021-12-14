@@ -5,24 +5,13 @@ import socketserver
 from threading import Condition
 from http import server
 import cube
+from time import sleep
 
 cube = cube.Cube()
 
 
 with open('index.html', 'r') as f:
     PAGE = f.read() 
-
-# PAGE="""\
-# <html>
-# <head>
-# <title>Raspberry Pi - Surveillance Camera</title>
-# </head>
-# <body>
-# <center><h1>Raspberry Pi - Surveillance Camera</h1></center>
-# <center><img src="stream.mjpg" width="640" height="480"></center>
-# </body>
-# </html>
-# """
 
 class StreamingOutput(object):
     def __init__(self):
@@ -46,22 +35,20 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
         move = str(post_data, 'utf-8')
-        move = getattr(cube, move)()
-        move
+        if move == 'reset':
+            cube.reset()
+        elif move in cube.moves_list:
+            move = getattr(cube, move)()
+            move
+        else:
+            cube.random_move()
+        print(cube.history)
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(cube.status)
 
     def do_GET(self):
-        if self.path == '/':
-            self.send_response(301)
-            self.send_header('Location', '/index.html')
-            self.end_headers()
-        elif self.path == '/index.html':
-            content = PAGE.encode('utf-8')
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/html')
-            self.send_header('Content-Length', len(content))
-            self.end_headers()
-            self.wfile.write(content)
-        elif self.path == '/stream.mjpg':
+        if self.path == '/capture.mjpeg':
             self.send_response(200)
             self.send_header('Age', 0)
             self.send_header('Cache-Control', 'no-cache, private')
@@ -96,6 +83,9 @@ with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
     #Uncomment the next line to change your Pi's Camera rotation (in degrees)
     # camera.rotation = 180
     # camera.zoom=(.22, .28, .55, .55)
+    camera.resolution = (640, 480)
+    camera.framerate = 24
+    sleep(1)
     camera.start_recording(output, format='mjpeg')
     try:
         address = ('', 8000)

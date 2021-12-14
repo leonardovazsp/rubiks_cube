@@ -35,6 +35,7 @@ class Cube():
         self.status = np.eye(6)[self.idx.astype(int)]
         self.orientation = 1
         self.history = self.get_history()
+        self.moves_list = ['right', 'right_rev', 'left', 'left_rev', 'top', 'top_rev', 'bottom', 'bottom_rev', 'front', 'front_rev', 'back', 'back_rev']
         self.moves = [self.right, self.right_rev, self.left, self.left_rev, self.top, self.top_rev, self.bottom, self.bottom_rev, self.front, self.front_rev, self.back, self.back_rev]
     
     def reset(self):
