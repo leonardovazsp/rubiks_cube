@@ -31,22 +31,6 @@ class StreamingOutput(object):
         return self.buffer.write(buf)
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
-        post_data = self.rfile.read(content_length) # <--- Gets the data itself
-        move = str(post_data, 'utf-8')
-        if move == 'reset':
-            cube.reset()
-        elif move in cube.moves_list:
-            move = getattr(cube, move)()
-            move
-        else:
-            cube.random_move()
-        print(cube.history)
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(cube.status)
-
     def do_GET(self):
         if self.path == '/capture.mjpeg':
             self.send_response(200)
