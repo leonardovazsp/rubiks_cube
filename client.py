@@ -48,50 +48,7 @@ class Generator():
             
 if __name__ == '__main__':
     generator = Generator()
-    # generator.generate_examples(2)
     for move in generator.moves_list:
         for i in range(4):
             generator.get_move(move=move)
             time.sleep(1)
-    # generator.get_move(move='reset')
-
-# # os.chdir(directory)
-# def get_move(filename, move=''):
-    
-#     r = requests.post(post_url, data=move)
-#     cube_pos = np.frombuffer(r.content).reshape(6,3,3,6)
-#     time.sleep(.25)
-#     cap1 = cv2.VideoCapture('http://192.168.1.103:8000/capture.mjpeg')
-#     cap2 = cv2.VideoCapture('http://192.168.1.117:8000/capture.mjpeg')
-#     ret, frame1 = cap1.read()
-#     ret, frame2 = cap2.read()
-#     cv2.imwrite(filename + '_1.jpg', frame1)
-#     cv2.imwrite(filename + '_2.jpg', frame2)
-#     np.save(filename + '.npy', cube_pos)    
-
-
-# # for j in range(5):
-# #     for i in range(2000, 2004):
-# #         filename = os.path.join(directory, str(i))
-# #         get_move(filename, move='top')
-# #     for i in range(2000, 2004):
-# #         filename = os.path.join(directory, str(i))
-# #         get_move(filename, move='front')
-# #     for i in range(2000, 2004):
-# #         filename = os.path.join(directory, str(i))
-# #         get_move(filename, move='left')
-# #     for i in range(2000, 2004):
-# #         filename = os.path.join(directory, str(i))
-# #         get_move(filename, move='back')
-# #     for i in range(2000, 2004):
-# #         filename = os.path.join(directory, str(i))
-# #         get_move(filename, move='bottom')
-# #     for i in range(2000, 2004):
-# #         filename = os.path.join(directory, str(i))
-# #         get_move(filename, move='right')
-# # for j in range(20):
-# for i in range(max_num, max_num + 150):
-#     filename = os.path.join(directory, str(i))
-#     get_move(filename)
-# filename = os.path.join(directory, 'reset')
-# get_move(filename, move='reset')
