@@ -1,3 +1,4 @@
+from tabnanny import verbose
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,33 +32,29 @@ def augmentation(img,
     x0_max = img.shape[0] - win_size
     y0_min = (img.shape[1] - img.shape[0])//2
     y0_max = img.shape[1] - win_size - y0_min
-    
     x = random.randint(x0_min, x0_max)
     y = random.randint(y0_min, y0_max)
-    
     brightness = random.uniform(*brightness_range)
     img = img[x:x+win_size, y:y+win_size]*brightness
     
     return tf.clip_by_value(img, 0, 1)
 
-def create_dataset(directory_path, training_size=0.9):
+def create_dataset(directory_path, training_size=0.9, verbose=True):
     filelist = []
     for file in os.listdir(directory_path):
         if (file.endswith('.jpg') & file[-10:-6].isnumeric()):
             filepath = os.path.join(directory_path, file)
             filelist.append(filepath[:])
-    
     image_count = len(filelist)
-    train_size = int(image_count * 0.95)
+    train_size = int(image_count * training_size)
     train_ds = filelist[:train_size]
     train_ds = tf.data.Dataset.list_files(train_ds, shuffle=False)
     train_ds = train_ds.shuffle(train_size, reshuffle_each_iteration=False)
     val_ds = filelist[train_size:]
     val_ds = tf.data.Dataset.list_files(val_ds, shuffle=False)
     val_ds = val_ds.shuffle(image_count-train_size, reshuffle_each_iteration=False)
-
-
-    print(f'Training size: {tf.data.experimental.cardinality(train_ds).numpy()}')
-    print(f'Validation size: {tf.data.experimental.cardinality(val_ds).numpy()}')
+    if verbose:
+        print(f'Training size: {tf.data.experimental.cardinality(train_ds).numpy()}')
+        print(f'Validation size: {tf.data.experimental.cardinality(val_ds).numpy()}')
     
     return train_ds, val_ds
