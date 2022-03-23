@@ -39,3 +39,25 @@ def augmentation(img,
     img = img[x:x+win_size, y:y+win_size]*brightness
     
     return tf.clip_by_value(img, 0, 1)
+
+def create_dataset(directory_path, training_size=0.9):
+    filelist = []
+    for file in os.listdir(directory_path):
+        if (file.endswith('.jpg') & file[-10:-6].isnumeric()):
+            filepath = os.path.join(directory_path, file)
+            filelist.append(filepath[:])
+    
+    image_count = len(filelist)
+    train_size = int(image_count * 0.95)
+    train_ds = filelist[:train_size]
+    train_ds = tf.data.Dataset.list_files(train_ds, shuffle=False)
+    train_ds = train_ds.shuffle(train_size, reshuffle_each_iteration=False)
+    val_ds = filelist[train_size:]
+    val_ds = tf.data.Dataset.list_files(val_ds, shuffle=False)
+    val_ds = val_ds.shuffle(image_count-train_size, reshuffle_each_iteration=False)
+
+
+    print(f'Training size: {tf.data.experimental.cardinality(train_ds).numpy()}')
+    print(f'Validation size: {tf.data.experimental.cardinality(val_ds).numpy()}')
+    
+    return train_ds, val_ds
