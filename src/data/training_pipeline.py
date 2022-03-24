@@ -81,10 +81,10 @@ def decode_img(img):
     Decodes bytes into jpeg, resizes the image and convert it into tensorflow tensor
     
     Args:
-    img: bytes from tf.io.read_file
+        img: bytes from tf.io.read_file
     
     Returns:
-    tensorflow tensor
+        tensorflow tensor
     '''
     img = tf.io.decode_jpeg(img, channels=3)/255
     img = tf.image.resize(img, [img_height, img_width])
@@ -92,6 +92,16 @@ def decode_img(img):
     return img
 
 def process_path(file_path):
+    '''
+    Reads image and labels from file_path
+    
+    Args:
+        file_path: string of the path of the image file - ends with .jpg
+    
+    Returns:
+        img: tensorflow tensor
+        label: tensorflow tensor
+    '''
     img = tf.io.read_file(file_path)
     img = decode_img(img)
     img = augmentation(img)
