@@ -77,7 +77,15 @@ def get_label(file_path):
     return label
 
 def decode_img(img):
-     
+    '''
+    Decodes bytes into jpeg, resizes the image and convert it into tensorflow tensor
+    
+    Args:
+    img: bytes from tf.io.read_file
+    
+    Returns:
+    tensorflow tensor
+    '''
     img = tf.io.decode_jpeg(img, channels=3)/255
     img = tf.image.resize(img, [img_height, img_width])
     img = tf.convert_to_tensor(img, dtype=tf.float32)
