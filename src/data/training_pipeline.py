@@ -42,25 +42,18 @@ def augmentation(img,
     
     return tf.clip_by_value(img, 0, 1)
 
-def create_dataset(directory_path, training_size=0.9, verbose=True):
+def get_dataset(directory_path):
     filelist = []
     for file in os.listdir(directory_path):
         if (file.endswith('.jpg') & file[-10:-6].isnumeric()):
             filepath = os.path.join(directory_path, file)
             filelist.append(filepath[:])
     image_count = len(filelist)
-    train_size = int(image_count * training_size)
-    train_ds = filelist[:train_size]
-    train_ds = tf.data.Dataset.list_files(train_ds, shuffle=False)
-    train_ds = train_ds.shuffle(train_size, reshuffle_each_iteration=False)
-    val_ds = filelist[train_size:]
-    val_ds = tf.data.Dataset.list_files(val_ds, shuffle=False)
-    val_ds = val_ds.shuffle(image_count-train_size, reshuffle_each_iteration=False)
-    if verbose:
-        print(f'Training size: {tf.data.experimental.cardinality(train_ds).numpy()}')
-        print(f'Validation size: {tf.data.experimental.cardinality(val_ds).numpy()}')
-    
-    return train_ds, val_ds
+    ds = tf.data.Dataset.list_files(filelist, shuffle=False)
+    ds = ds.shuffle(image_count, reshuffle_each_iteration=False)
+    ds = ds.map(wrapper_func)
+    ds = configure_for_performance(ds)
+    return ds
 
 def get_label(file_path):
     label = np.load(str(file_path.numpy(), 'utf-8')[:-6] + '.npy')
@@ -119,10 +112,8 @@ def wrapper_func(x):
     x, y = tf.py_function(process_path, [x], [tf.float32, tf.float32])
     return x, y
 
-def get_data_set():
-    train_ds, val_ds = create_dataset(path)
-    train_ds = train_ds.map(wrapper_func)
-    val_ds = val_ds.map(wrapper_func)
-    train_ds = configure_for_performance(train_ds)
-    val_ds = configure_for_performance(val_ds)
+def get_data_set(path):
+    train_ds = get_dataset(path['train'])
+    val_ds = get_dataset(path['val'])
+    test_ds = get_dataset(path['test'])
     return train_ds, val_ds
