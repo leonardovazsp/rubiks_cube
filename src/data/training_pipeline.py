@@ -42,7 +42,7 @@ def augmentation(img,
     
     return tf.clip_by_value(img, 0, 1)
 
-def get_dataset(directory_path):
+def get_dataset(directory_path, batch_size):
     filelist = []
     for file in os.listdir(directory_path):
         if (file.endswith('.jpg') & file[-10:-6].isnumeric()):
@@ -52,7 +52,7 @@ def get_dataset(directory_path):
     ds = tf.data.Dataset.list_files(filelist, shuffle=False)
     ds = ds.shuffle(image_count, reshuffle_each_iteration=False)
     ds = ds.map(wrapper_func)
-    ds = configure_for_performance(ds)
+    ds = configure_for_performance(ds, batch_size)
     return ds
 
 def get_label(file_path):
@@ -69,7 +69,7 @@ def get_label(file_path):
     label = tf.convert_to_tensor(label, dtype=tf.float32)
     return label
 
-def decode_img(img):
+def decode_img(img, img_resolution):
     '''
     Decodes bytes into jpeg, resizes the image and convert it into tensorflow tensor
     
@@ -80,7 +80,7 @@ def decode_img(img):
         tensorflow tensor
     '''
     img = tf.io.decode_jpeg(img, channels=3)/255
-    img = tf.image.resize(img, [img_height, img_width])
+    img = tf.image.resize(img, *img_resolution)
     img = tf.convert_to_tensor(img, dtype=tf.float32)
     return img
 
@@ -112,8 +112,8 @@ def wrapper_func(x):
     x, y = tf.py_function(process_path, [x], [tf.float32, tf.float32])
     return x, y
 
-def get_data_set(path):
-    train_ds = get_dataset(path['train'])
-    val_ds = get_dataset(path['val'])
-    test_ds = get_dataset(path['test'])
-    return train_ds, val_ds
+def dataset(path, batch_size):
+    train_ds = get_dataset(path['train'], batch_size)
+    val_ds = get_dataset(path['val'], batch_size)
+    test_ds = get_dataset(path['test'], batch_size)
+    return train_ds, val_ds, test_ds
