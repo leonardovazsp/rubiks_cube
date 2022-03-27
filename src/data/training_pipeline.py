@@ -9,17 +9,6 @@ from scipy import ndimage
 import copy
 import tensorflow as tf
 
-
-
-
-
-# def dataset(path, batch_size, window_crop_ratio=0.8, window_resolution=(192, 192)):
-#     train_ds = get_dataset(path['train'], batch_size, window_crop_ratio, window_resolution)
-#     val_ds = get_dataset(path['val'], batch_size)
-#     test_ds = get_dataset(path['test'], batch_size)
-#     return train_ds, val_ds, test_ds
-
-
 class DataPipeline():
     def __init__(self, path, batch_size, window_crop_ratio=0.8, window_resolution=(192, 192), brightness_range=(0.8, 1.2), rotation_range=(-20, 20)):
         print('Class initiated')
@@ -135,5 +124,3 @@ class DataPipeline():
                 filepath = os.path.join(directory_path, file)
                 filelist.append(filepath[:])
         return filelist
-        
-        
