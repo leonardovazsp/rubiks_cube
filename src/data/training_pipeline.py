@@ -112,20 +112,8 @@ def wrapper_func(x):
     x, y = tf.py_function(process_path, [x], [tf.float32, tf.float32])
     return x, y
 
-<<<<<<< HEAD
-def get_data_set():
-    train_ds, val_ds = create_dataset(path)
-    train_ds = train_ds.map(wrapper_func)
-    val_ds = val_ds.map(wrapper_func)
-    train_ds = configure_for_performance(train_ds)
-    val_ds = configure_for_performance(val_ds)
-    return train_ds, val_ds
-
-#test main branch
-=======
 def dataset(path, batch_size):
     train_ds = get_dataset(path['train'], batch_size)
     val_ds = get_dataset(path['val'], batch_size)
     test_ds = get_dataset(path['test'], batch_size)
     return train_ds, val_ds, test_ds
->>>>>>> training_pipeline
